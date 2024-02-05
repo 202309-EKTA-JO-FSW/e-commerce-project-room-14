@@ -45,4 +45,24 @@ const searchItems=async(req,res)=>
     res.status(500).json({ message: 'Error searching items' });
   }
 }
-module.exports={removeItems,searchItems};
+
+const addNewItem = async (req, res) => {
+  try {
+      const { title, image, price, description, availableCount, genre } = req.body;
+      
+      // Check for required fields
+      if (!title || !price || !availableCount || !genre) {
+          return res.status(400).json({ message: "Title, price, availableCount, and genre are required for a new item" });
+      }
+
+      const newItem = new shopItemModel({ title, image, price, description, availableCount, genre });
+      await newItem.save();
+
+      return res.status(201).json({ message: "Item added successfully", newItem });
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+module.exports={removeItems,searchItems, addNewItem};
