@@ -3,11 +3,11 @@ const router = express.Router();
 
 const customerController = require("../controllers/customer");
 
-router.get("/customer", customerController.getAllShopItems);
-router.get("/customer/filter", customerController.filterItems);
-router.get("/customer/search", customerController.searchItems);
+router.get("/", customerController.getAllShopItems);
+router.get("/filter", customerController.filterItems);
+router.get("/search", customerController.searchItems);
 router.post("/:id/cart", customerController.addToCart);
 router.post("/:id/checkout", customerController.orderAndCheckout);
-router.get("/:id/customer", customerController.getOneItem);
+router.get("/:id", customerController.getOneItem);
 
 module.exports = router;

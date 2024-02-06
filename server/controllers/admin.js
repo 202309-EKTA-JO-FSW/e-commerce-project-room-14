@@ -1,4 +1,4 @@
-
+//hi
 const shopItemModel = require("../models/shop-item");
 
 
@@ -13,7 +13,7 @@ const removeItems = async(req,res)=>
 
         const deletedItems = await shopItemModel.deleteMany({_id:{$in : itemsIds }});
 
-        if (deletedItems.deletedCount===0)
+        if (deletedItems.deletedCount === 0)
         {
           return res.status(404).json({message:"No Item found"})
         }
@@ -56,7 +56,6 @@ const addNewItem = async (req, res) => {
   try {
       const { title, image, price, description, availableCount, genre } = req.body;
       
-      // Check for required fields
       if (!title || !price || !availableCount || !genre) {
           return res.status(400).json({ message: "Title, price, availableCount, and genre are required for a new item" });
       }
@@ -86,7 +85,6 @@ const updateItemDetails = async (req, res) => {
       return res.status(404).json({ message: "Item not found" });
     }
 
-    // Update item details
     if (title) item.title = title;
     if (image) item.image = image;
     if (price) item.price = price;

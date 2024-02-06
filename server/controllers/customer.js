@@ -6,7 +6,7 @@ const shopItemModel = require("../models/shop-item");
 const customerController = {};
 
 
-// router.get("/customer", customerController.getAllShopItems);
+// router.get("/", customerController.getAllShopItems);
 customerController.getAllShopItems = async (req, res) => {
     try{
         const shopItems = await shopItemModel.find({});
@@ -47,7 +47,7 @@ customerController.searchItems = async (req, res) => {
     try {
         const { query } = req.query;
         const searchResults = await shopItemModel.find({
-            $text: { $search: query }
+            title: { $regex: query, $options: 'i' }
         });
         res.status(200).json(searchResults);
     }
@@ -132,9 +132,9 @@ customerController.orderAndCheckout = async (req, res) => {
 // router.get("/:id", customerController.getOneItem);
 customerController.getOneItem = async (req, res) => {
     try{
-        const { itemId } = req.params;
+        const { id } = req.params;
 
-        const item = await shopItemModel.findById(itemId);
+        const item = await shopItemModel.findById(id);
 
         if(!item){
             return res.status(404).json({message: "Item not found"});

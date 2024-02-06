@@ -7,7 +7,6 @@ const shopItem = new mongoose.Schema({
         maxLength: 50,
     },
     image: {
-        data: Buffer,
         type: String,
     },
     price: {

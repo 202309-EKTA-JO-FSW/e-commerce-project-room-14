@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const cart = new mongoose.model({
+const cart = new mongoose.Schema({
     numberOfItems: {
         type: Number,
         default: 0,
@@ -17,7 +17,7 @@ const cart = new mongoose.model({
     ],
 });
 
-const order = new mongoose.model({
+const order = new mongoose.Schema({
     numberOfItems: {
         type: Number,
         default: 0,
@@ -38,7 +38,7 @@ const order = new mongoose.model({
     ],
 })
 
-const customer = new mongoose.model({
+const customer = new mongoose.Schema({
     name: {
         type: String,
         required: true,
