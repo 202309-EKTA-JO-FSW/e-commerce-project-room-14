@@ -51,7 +51,12 @@ const newAdmin=async(req,res)=>
   }
 
 }
+const signout=async(req,res)=>
+{
+  res.cookie('jwt','',{maxAge:1});
+  res.status(200).json({ message: 'Signout successful' });
 
+}
 const removeItems = async(req,res)=>
   {
     try {
@@ -151,7 +156,7 @@ const updateItemDetails = async (req, res) => {
   }
 };
 
-module.exports={removeItems, searchItems, addNewItem, updateItemDetails,signin, newAdmin };
+module.exports={removeItems, searchItems, addNewItem, updateItemDetails,signin, newAdmin,signout };
 
 
 

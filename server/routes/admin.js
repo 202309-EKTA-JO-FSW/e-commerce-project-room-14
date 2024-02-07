@@ -4,6 +4,7 @@ const adminController = require("../controllers/admin");
 
 router.post("/signin",adminController.signin);
 router.post("/new-admin",adminController.newAdmin);
+router.post("/signout",adminController.signout);
 router.delete("/removeItems",adminController.removeItems);
 router.get("/searchItems",adminController.searchItems);
 router.post('/addItem', adminController.addNewItem);
