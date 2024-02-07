@@ -26,16 +26,13 @@ const order = new mongoose.Schema({
         type: Number,
         default: 0,
     },
+    items: {
+        type: String,
+    },
     date: {
         type: Date,
         default: Date.now(),
     },
-    shopItemsRef: [
-        {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "shop-item",
-        }
-    ],
 })
 
 const customer = new mongoose.Schema({
@@ -61,8 +58,8 @@ const customer = new mongoose.Schema({
         default: {},
     },
     order: { 
-        type: [ order ],
-        default: [],
+        type: String,
+        default: {},
      },
 });
 
