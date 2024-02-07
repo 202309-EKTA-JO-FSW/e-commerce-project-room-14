@@ -9,6 +9,7 @@ router.delete("/removeItems",adminController.removeItems);
 router.get("/searchItems",adminController.searchItems);
 router.post('/addItem', adminController.addNewItem);
 router.put('/items/:itemId', adminController.updateItemDetails);
+router.get("/customers",adminController.getCustomers);
 
 
 module.exports = router;

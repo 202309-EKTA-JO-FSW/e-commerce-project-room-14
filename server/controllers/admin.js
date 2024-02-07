@@ -2,7 +2,9 @@
 const shopItemModel = require("../models/shop-item");
 const bcrypt=require ("bcrypt");
 const admin=require ("../models/admin");
+const customers= require("../models/customer");
 const jwt=require("jsonwebtoken");
+const customer = require("../models/customer");
 const signin=async(req,res)=>
 {
   const {email,password}=req.body;
@@ -57,6 +59,22 @@ const signout=async(req,res)=>
   res.status(200).json({ message: 'Signout successful' });
 
 }
+const getCustomers=async(req,res)=>
+{
+  try {
+    const customers=await customer.find({});
+    if (!customers || customers.length === 0){
+      return res.status(404).json({ message: 'No customers found' });
+    
+    }
+    res.status(200).json(customers);
+  } catch (error) {
+    console.error(error);
+  res.status(500).json({ message: 'Internal server error' });
+  }
+
+}
+
 const removeItems = async(req,res)=>
   {
     try {
@@ -156,7 +174,7 @@ const updateItemDetails = async (req, res) => {
   }
 };
 
-module.exports={removeItems, searchItems, addNewItem, updateItemDetails,signin, newAdmin,signout };
+module.exports={removeItems, searchItems, addNewItem, updateItemDetails,signin, newAdmin,signout ,getCustomers};
 
 
 
