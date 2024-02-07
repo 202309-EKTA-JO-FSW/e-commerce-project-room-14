@@ -29,7 +29,28 @@ const signin=async(req,res)=>
   }
   
 }
+const newAdmin=async(req,res)=>
+{
+  const {name,email,password}=req.body;
+  try {
+    const existAdmin=await shopItemModel.findOne({email});
+    if (existAdmin)
+    {
+      return res.status(400).json({ message: 'Admin already exists' });
+    }
+    const hashedPassword=await bcrypt.hash(password,10);
+    
+    const newAdmin=await admin.create({name,email,hashedPassword});
+    const token=jwt.sign({userId:adminAccount._id,isAdmin: true},process.env.Access_Token_Key,{expiresIn:'24h'});
+    res.cookie('jwt', token, { httpOnly: true, maxAge: 86400000 }); // maxAge is in milliseconds (24 hours)
+    res.status(201).json({ message: 'New admin account created successfully' });
+    
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
 
+}
 
 const removeItems = async(req,res)=>
   {
@@ -130,7 +151,7 @@ const updateItemDetails = async (req, res) => {
   }
 };
 
-module.exports={removeItems, searchItems, addNewItem, updateItemDetails,signin };
+module.exports={removeItems, searchItems, addNewItem, updateItemDetails,signin, newAdmin };
 
 
 
