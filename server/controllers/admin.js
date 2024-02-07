@@ -2,7 +2,7 @@
 const shopItemModel = require("../models/shop-item");
 const bcrypt=require ("bcrypt");
 const admin=require ("../models/admin");
-const customers= require("../models/customer");
+const customer= require("../models/customer");
 const jwt=require("jsonwebtoken");
 const customer = require("../models/customer");
 const signin=async(req,res)=>
@@ -74,7 +74,29 @@ const getCustomers=async(req,res)=>
   }
 
 }
+const getOrders=async(req,res)=>
+{
+  try {
+    //populate() method is used to replace the shopItemsRef field in each order with the actual documents from the shop-item collection. 
+    const customersWithOrders=await customer.find({},'order').populate('order.shopItemsRef');
+    if (!orders || orders.length === 0) {
+      return res.status(404).json({ message: 'No orders found' });
+    }
+    const allOrders = customersWithOrders.flatMap(customer => customer.order.map(order => ({
+      items: order.shopItemsRef, // order contains an array of shopItem references
+      numberOfItems: order.numberOfItems, 
+      totalPrice: order.totalPrice,
+      date: order.date,
+      customerName: customer.name
+  })));
+  res.status(200).json({ orders: allOrders })
+  
+  } catch (error) {
+    console.error(error);
+  res.status(500).json({ message: 'Internal Server Error' });
+  }
 
+}
 const removeItems = async(req,res)=>
   {
     try {
@@ -174,7 +196,15 @@ const updateItemDetails = async (req, res) => {
   }
 };
 
-module.exports={removeItems, searchItems, addNewItem, updateItemDetails,signin, newAdmin,signout ,getCustomers};
+module.exports={removeItems, 
+  searchItems,
+   addNewItem, 
+   updateItemDetails,
+   signin, 
+   newAdmin,
+   signout ,
+   getCustomers,
+   getOrders};
 
 
 
