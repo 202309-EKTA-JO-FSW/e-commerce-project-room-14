@@ -58,12 +58,12 @@ const customer = new mongoose.Schema({
     },
     cart: {
         type: cart,
+        default: {},
     },
-    order: [
-        {
-        type: order,
-        }   
-    ],
+    order: { 
+        type: [ order ],
+        default: [],
+     },
 });
 
 module.exports = mongoose.model("customer", customer);
