@@ -150,7 +150,7 @@ customerController.searchItems = async (req, res) => {
 // router.post("/:id/cart", customerController.addToCart);
 customerController.addToCart = async (req, res) => {
     try{
-        const {id } = req.params;
+        const {id} = req.params;
         const { itemId, quantity } = req.body;
 
         const customer = await customerModel.findById(id);
@@ -199,6 +199,7 @@ customerController.orderAndCheckout = async (req, res) => {
         }
 
         const items = customer.cart.shopItemsRef;
+        //return res.json(items);
         const orderItems = await shopItemModel.find({ _id: { $in: items } }, { title: 1, _id: 0 });
         const mappedItems = orderItems.map(item => item.title);
         const cartItems = mappedItems.join(', ');
