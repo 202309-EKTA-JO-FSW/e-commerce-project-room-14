@@ -4,7 +4,6 @@ const bcrypt=require ("bcrypt");
 const admin=require ("../models/admin");
 const customer= require("../models/customer");
 const jwt=require("jsonwebtoken");
-const customer = require("../models/customer");
 const signin=async(req,res)=>
 {
   const {email,password}=req.body;
