@@ -54,7 +54,6 @@ customerController.signup = async (req, res) => {
         };
         const accessToken = jwt.sign(content, secretKey, {expiresIn: "1h"});
         res.json({accessToken: accessToken});
-        res.json(customer);
         res.redirect("/customer/");
     }
     catch (err){
@@ -82,7 +81,7 @@ customerController.signin = async (req, res) => {
             isAdmin: false,
         };
         const accessToken = jwt.sign(content, secretKey, {expiresIn: "1h"});
-        res.json(customer);
+        res.json({accessToken: accessToken});
         res.redirect("/customer/");
         
     }

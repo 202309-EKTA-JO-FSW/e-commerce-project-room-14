@@ -1,6 +1,6 @@
 const express  = require("express");
 const router = express.Router();
-const checkBlackListToken = require("../middlewares/checkBlackListTokens");
+const checkBlackListToken = require("../middleware/checkBlackListToken");
 const customerModel = require("../models/customer");
 
 const customerController = require("../controllers/customer");
