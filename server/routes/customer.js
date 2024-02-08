@@ -1,13 +1,13 @@
 const express  = require("express");
 const router = express.Router();
-const checkBlackListToken = require("../middlewares/checkBlackListTokens");
+const checkBlackListToken = require("../middleware/checkBlackListToken");
 const customerModel = require("../models/customer");
 
 const customerController = require("../controllers/customer");
 
 router.post('/signup', customerController.signup);
 router.post("/signin", customerController.signin);
-router.post("/signout",checkBlackListToken, customerController.signout);
+router.post("/signout", customerController.signout);
 
 router.get("/", customerController.getAllShopItems);
 router.get("/filter", customerController.filterItems);

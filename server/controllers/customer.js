@@ -25,7 +25,6 @@ validateCriteria
 customerController.signup = async (req, res) => {
     try{
         const { username, email, password1, password2, gender } = req.body;
-
         const exists = await customerModel.findOne({ email: email}, {});
         if(exists){
             return res.status(400).json({message: "Email Already Used"});
@@ -37,8 +36,7 @@ customerController.signup = async (req, res) => {
             return res.status(400).json({message: "password does not follow the requied criteria"})
         }
 
-        const hashedPassword = await bcrypt.hash(password1, 10);
-
+        const hashedPassword = await hash(password1);
         await customerModel.create({
             name: username,
             email,
@@ -46,16 +44,9 @@ customerController.signup = async (req, res) => {
             gender,
         });
 
-        const customer = await customerModel.findOne({ email: email }, {});
-
-        const content = {
-            id: customer._id,
-            isAdmin: false,
-        };
-        const accessToken = jwt.sign(content, secretKey, {expiresIn: "1h"});
-        res.json({accessToken: accessToken});
-        res.json(customer);
-        res.redirect("/customer/");
+     const token = jwt.sign({ userId: customerModel._id, isAdmin: false }, process.env.Access_Token_Key, { expiresIn: '24h' });
+    res.cookie('jwt', token, { httpOnly: true, maxAge: 86400000 }); // maxAge is in milliseconds (24 hours)
+    res.status(200).json({ message: 'New admin account created successfully', token });
     }
     catch (err){
         res.status(400).json(err.message);
@@ -77,13 +68,10 @@ customerController.signin = async (req, res) => {
             res.status(400).json({message: "email or password incorrect"})
         }
 
-        const content = {
-            id: customer._id,
-            isAdmin: false,
-        };
-        const accessToken = jwt.sign(content, secretKey, {expiresIn: "1h"});
-        res.json(customer);
-        res.redirect("/customer/");
+        const token = jwt.sign({ userId: customerModel._id, isAdmin: false }, process.env.Access_Token_Key, { expiresIn: '24h' });
+        res.cookie('jwt', token, { httpOnly: true, maxAge: 86400000 }); // maxAge is in milliseconds (24 hours)
+        res.status(200).json({ message: 'New admin account created successfully', token });
+        
         
     }
     catch (err){
@@ -93,10 +81,9 @@ customerController.signin = async (req, res) => {
 
 //router.post("/signout", customerController.signout);
 customerController.signout = async (req, res) => {
-    const token = await req.headers['authorization']?.split(' ')[1];
-    await blackListedTokensModel.create({ token: token });
-    res.status(200).json({ message: "you signed out successfully" });
-}
+    res.cookie('jwt', '', { maxAge: 1 });
+    res.status(200).json({ message: 'Signout successful' });
+  }
 
 // router.get("/", customerController.getAllShopItems);
 customerController.getAllShopItems = async (req, res) => {
@@ -135,11 +122,12 @@ customerController.filterItems = async (req, res) => {
 }
 
 // router.get("/customer/search", customerController.searchItems);
+// router.get("/customer/search", customerController.searchItems);
 customerController.searchItems = async (req, res) => {
     try {
-        const { query } = req.query;
+        const { title } = req.query;
         const searchResults = await shopItemModel.find({
-            title: { $regex: query, $options: 'i' }
+            title: { $regex: title, $options: 'i' }
         });
         res.status(200).json(searchResults);
     }
@@ -147,7 +135,6 @@ customerController.searchItems = async (req, res) => {
         res.status(422).json(err);
     }
 }
-
 // router.post("/:id/cart", customerController.addToCart);
 customerController.addToCart = async (req, res) => {
     try{
@@ -198,8 +185,11 @@ customerController.orderAndCheckout = async (req, res) => {
         if(!customer){
             return res.status(404).json({message: "customer not found"});
         }
-
         const items = customer.cart.shopItemsRef;
+        if(!items.length)
+        {
+            return res.status(404).json({message: "The cart is empty"});   
+        }
         const orderItems = await shopItemModel.find({ _id: { $in: items } }, { title: 1, _id: 0 });
         const mappedItems = orderItems.map(item => item.title);
         const cartItems = mappedItems.join(', ');
@@ -243,6 +233,9 @@ customerController.getOneItem = async (req, res) => {
         res.status(422).json(err);
     }
 }
-
+const hash = async (pw) => {
+    const saltRounds = 10;
+    return await bcrypt.hash(pw, saltRounds);
+  }
 
 module.exports = customerController;

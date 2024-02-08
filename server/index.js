@@ -1,5 +1,6 @@
 const express = require("express");
 require("dotenv").config();
+const cookieParser = require('cookie-parser')
 
 const connectToMongo = require("./db/connection");
 
@@ -14,6 +15,7 @@ const port =
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+app.use(cookieParser());
 
 app.use("/admin", adminRoutes);
 app.use("/customer", customerRoutes);

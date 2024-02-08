@@ -1,5 +1,5 @@
 {
-  "name": "E-commerce",
+  "name": "e-commerce",
   "version": "1.0.0",
   "description": "E-Commerce",
   "main": "index.js",
@@ -11,19 +11,22 @@
     "prune": "docker-compose down -v",
     "stop": "docker-compose down",
     "test:app": "NODE_ENV=test mocha --exit --require mocha-steps ./server/tests",
-    "test": "CONT=$(docker ps -aqf name=node-app) && [ $CONT ] && docker exec -t -w /backend-app $CONT npm run test:app"
+    "test": "CONT=$(docker ps -aqf name=node-app) && [ $CONT ] && docker exec -t -w /backend-app $CONT npm run test:app",
+    "shell": "docker exec -it mongodb-e-commerce mongosh -u admin -p 13SomeSecretPasswordNo1Nos13"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.1",
+    "cookie-parser": "^1.4.6",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "express-session": "^1.18.0",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^4.1.2",
     "mongoose": "^6.0.7",
-    "package": "^1.0.1"
+    "package": "^1.0.1",
+    "password-validator": "^5.3.0"
   },
   "devDependencies": {
     "chai": "^4.3.4",

@@ -58,7 +58,7 @@ const customer = new mongoose.Schema({
         default: {},
     },
     order: { 
-        type: String,
+        type: order,
         default: {},
      },
 });
